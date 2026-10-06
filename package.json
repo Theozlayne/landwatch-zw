@@ -1,0 +1,35 @@
+{
+  "name": "landwatch-zw",
+  "version": "1.0.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "node node_modules/@expo/cli/build/bin/cli start",
+    "android": "node node_modules/@expo/cli/build/bin/cli start --android",
+    "ios": "node node_modules/@expo/cli/build/bin/cli start --ios",
+    "web": "node node_modules/@expo/cli/build/bin/cli start --web",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~5.0.5",
+    "@expo/vector-icons": "^14.0.0",
+    "expo": "~53.0.0",
+    "expo-asset": "~11.0.5",
+    "expo-font": "~13.3.2",
+    "expo-image-picker": "~16.1.4",
+    "expo-location": "~18.1.6",
+    "expo-status-bar": "~2.0.0",
+    "firebase": "^11.0.0",
+    "prop-types": "^15.8.1",
+    "react": "19.0.0",
+    "react-dom": "^19.0.0",
+    "react-native": "0.79.2",
+    "react-native-maps": "^1.20.1",
+    "react-native-svg": "file:../../../Documents/Bots/graii-app/node_modules/react-native-svg",
+    "react-native-web": "^0.20.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.0.10",
+    "typescript": "~5.8.3"
+  }
+}

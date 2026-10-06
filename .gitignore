@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+.env
+.env.local
+.env.*.local
+dist/
+web-build/
+*.log
+firebase-debug.log

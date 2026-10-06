@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "LandWatch ZW",
+    "slug": "landwatch-zw",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "landwatchzw",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "icon": "./coat-of-arms-transparent.png",
+    "splash": {
+      "image": "./coat-of-arms-transparent.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#06291A"
+    },
+    "android": {
+      "package": "zw.landwatch.citizen",
+      "versionCode": 1,
+      "icon": "./coat-of-arms-transparent.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./coat-of-arms-transparent.png",
+        "backgroundColor": "#06291A"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d7b281d6-fa4e-4b70-b2f7-3f1dd75d1055"
+      }
+    },
+    "owner": "starrmch"
+  }
+}
