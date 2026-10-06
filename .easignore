@@ -1,6 +1,7 @@
 .git/
 .expo/
 node_modules/
+package-lock.json
 dist/
 promo_output/
 video_review/
