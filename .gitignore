@@ -7,3 +7,8 @@ dist/
 web-build/
 *.log
 firebase-debug.log
+.firebase/
+promo_output/
+video_review/
+build/
+*.mp4
