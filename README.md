@@ -29,7 +29,7 @@ Some displayed metrics, reward points, notification behavior and analytics are p
 ## Local setup
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/Theozlayne/landwatch-zw.git
 cd landwatch-zw
 npm install
 Copy-Item .env.example .env.local

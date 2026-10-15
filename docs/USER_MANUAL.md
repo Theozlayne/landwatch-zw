@@ -1,5 +1,7 @@
 # LandWatch ZW User Manual
 
+Repository: https://github.com/Theozlayne/landwatch-zw
+
 ## 1. Purpose and scope
 
 LandWatch ZW is an academic prototype for a ministry-style land and environmental reporting workflow. A citizen submits a report; authorised staff review, assign and investigate it; the citizen can follow the status of their own reports.
