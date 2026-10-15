@@ -45,8 +45,11 @@ service cloud.firestore {
             'status',
             'updatedAt'
           ]))
-        || (isStaff()
+        || (signedIn()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'inspector'
           && request.auth.token.email == resource.data.assignedInspector
+          && request.resource.data.status in ['Under Review', 'Verified', 'Assigned']
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'status',
             'reviewedBy',

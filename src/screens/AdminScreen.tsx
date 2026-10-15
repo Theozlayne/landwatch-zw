@@ -352,7 +352,7 @@ function Review({ report, staffRole, staffDirectory, adminId, onBack, onUpdateSt
   const [pending, setPending] = useState<CaseStatus | null>(null);
   const [note, setNote] = useState('');
   const [inspector, setInspector] = useState(report.assignedInspector ?? '');
-  const statuses: CaseStatus[] = ['Under Review', 'Verified', 'Assigned', 'Resolved', 'Rejected'];
+  const statuses: CaseStatus[] = staffRole === 'admin' ? ['Under Review', 'Verified', 'Assigned', 'Resolved', 'Rejected'] : ['Under Review', 'Verified', 'Assigned'];
   const noteRequired = pending === 'Resolved' || pending === 'Rejected';
   const confirm = async () => {
     if (!pending) return;
@@ -374,7 +374,7 @@ function Review({ report, staffRole, staffDirectory, adminId, onBack, onUpdateSt
     <View style={s.reviewTitleRow}><View style={s.headingCopy}><Text style={s.eyebrow}>CASE REVIEW</Text><Text style={s.title}>{report.category}</Text><Text style={s.reference}>{ref(report)}</Text></View><StatusBadge status={report.status} /></View>
     <View style={s.detailGrid}><View style={s.detail}><Text style={s.labelFirst}>Citizen description</Text><Text style={s.value}>{report.description}</Text><Text style={s.settingLabel}>Reported location</Text><Text style={s.value}>{location(report, 5)}</Text><Text style={s.settingLabel}>Submission date</Text><Text style={s.value}>{date(report)}</Text></View><View style={s.evidenceCard}><Text style={s.labelFirst}>Submitted evidence</Text>{report.evidenceUrl ? <Image source={{ uri: report.evidenceUrl }} style={s.reviewImage} resizeMode="cover" /> : <View style={s.reviewImageEmpty}><Ionicons name="image-outline" size={32} color={C.muted} /><Text style={s.emptyStateText}>No evidence was attached.</Text></View>}</View></View>
     <AiAdvisoryPanel report={report} onAnalyse={onAnalyseEvidence} />{staffRole === 'inspector' ? <FindingsPanel report={report} onSubmit={onSubmitFindings} /> : <ClarificationPanel report={report} onSubmit={onRequestClarification} />}
-    <View style={{ backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 12, padding: 20, marginTop: 18 }}>
+     {staffRole === 'admin' ? <View style={{ backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 12, padding: 20, marginTop: 18 }}>
       <Text style={s.sectionTitle}>Operational assignment</Text><Text style={s.sectionHint}>Move this case from Ministry triage into field work.</Text>
       <StaffPicker label="Investigator / field officer" value={inspector} staff={staffDirectory} onChange={setInspector} />
       {assignmentError ? <Text style={s.error}>{assignmentError}</Text> : null}
@@ -383,7 +383,7 @@ function Review({ report, staffRole, staffDirectory, adminId, onBack, onUpdateSt
         <Text style={s.settingLabel}>Current workflow</Text>
         <Text style={s.settingValue}>{report.assignedInspector ? `Investigator: ${report.assignedInspector}` : 'Investigator not assigned'}</Text>
       </View>
-    </View>
+     </View> : null}
     <View style={s.actionCard}><Text style={s.sectionTitle}>Update case status</Text><Text style={s.sectionHint}>Select an action, add an official note where required, then confirm.</Text><View style={s.statusGrid}>{statuses.map(status => <Pressable key={status} disabled={busy || report.status === status} onPress={() => { setPending(status); setError(''); }} style={[s.statusButton, report.status === status && s.statusCurrent, pending === status && s.statusPending, status === 'Rejected' && s.rejectButton]}><Text style={[s.statusButtonText, status === 'Rejected' && s.rejectText]}>{report.status === status ? `${status} · Current` : status}</Text></Pressable>)}</View>{pending && <View style={s.confirmPanel}><Text style={s.confirmTitle}>Confirm “{pending}”</Text><Text style={s.confirmText}>{noteRequired ? 'An official reason is required for this final decision.' : 'You may add an internal note for this action.'}</Text><TextInput value={note} onChangeText={setNote} multiline numberOfLines={4} textAlignVertical="top" placeholder={noteRequired ? 'Enter the official reason…' : 'Optional internal note…'} placeholderTextColor={C.muted} style={s.noteInput} />{error ? <Text style={s.error}>{error}</Text> : null}<View style={s.confirmActions}><Pressable disabled={busy} onPress={() => { setPending(null); setNote(''); setError(''); }} style={s.cancelButton}><Text style={s.cancelText}>Cancel</Text></Pressable><Pressable disabled={busy} onPress={() => void confirm()} style={[s.confirmButton, pending === 'Rejected' && s.confirmDanger, busy && s.disabled]}>{busy ? <ActivityIndicator color={C.white} /> : <Text style={s.primaryText}>Confirm update</Text>}</Pressable></View></View>}</View>
   </View>;
 }

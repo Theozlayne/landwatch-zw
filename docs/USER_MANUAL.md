@@ -24,7 +24,7 @@ npm install
 Copy-Item .env.example .env.local
 ```
 
-Edit `.env.local` with the client configuration from the Firebase Console. These are public web-app configuration values, not private service credentials:
+Edit `.env.local` with the client configuration from the Firebase Console. These are public web-app configuration values, not private service credentials. A marker may use the configured `landwatchzw` demonstration Firebase project if the project owner supplies these values out-of-band, or create a separate Firebase project and use that project's values. The repository does not contain either project's secrets or user data.
 
 ```text
 EXPO_PUBLIC_FIREBASE_PROJECT_ID
@@ -65,7 +65,7 @@ It writes generated output to `dist/`, which is intentionally ignored by Git.
 
 ## 4. Firebase setup
 
-The application expects a Firebase project with Email/password Authentication, Firestore Database and Storage enabled. Google Authentication is optional. Deploy `firestore.rules`, `firestore.indexes.json` and the callable Function when those connected features are needed.
+The application expects a Firebase project with Email/password Authentication and Firestore Database enabled. Google Authentication is optional. The current evidence-upload path uses Cloudinary, not Firebase Storage; Firebase Storage is not required by the implemented reporting workflow. Deploy `firestore.rules`, `firestore.indexes.json` and the callable Function when those connected features are needed.
 
 An authorised Firebase project owner can deploy:
 
@@ -87,9 +87,11 @@ Create a normal Firebase Authentication email/password account through the Fireb
 
 ### Administrator and investigator
 
-Staff roles are read from the Firestore `users` collection. An authorised project owner should create fictional Authentication users, then create role documents with `displayName`, `email` and one of the roles `admin` or `inspector`.
+Staff roles are read from the Firestore `users` collection. An authorised project owner should create fictional Authentication users, then create role documents with `displayName`, `email` and one of the roles `admin` or `inspector`. The document ID must be exactly the Firebase Authentication user's UID; the rules and application use that UID to authorise staff access.
 
-Only an administrator can invoke the deployed `createInspectorAccount` callable Function. The Function creates an inspector Authentication account and matching Firestore role document. It generates the initial password internally; the project does not expose or commit it. Configure the account’s sign-in/reset process through an approved demonstration procedure.
+The deployed `createInspectorAccount` callable Function is administrator-only. It creates an inspector Authentication account and matching Firestore role document, but generates the initial password internally and returns only the UID. The current client does not expose a live account-creation or staff password-reset screen.
+
+For a reliable marker account, create the fictional staff user in Firebase Console > Authentication > Users with Email/Password, copy its UID, and create `users/{UID}` in Firestore with the matching email, display name and role. The document ID must be the Authentication UID. If the password is unknown, use the Authentication user menu's password-reset option and send the reset email to the fictional account address. The current client has no in-app staff password-reset screen, and the directory's “Create inspector” control is labelled as a prototype preview rather than a live account-creation flow.
 
 Never make public self-service administrator registration available.
 
@@ -125,7 +127,7 @@ AI evidence analysis, where configured, is advisory and does not decide whether 
 1. Sign in with a Firestore user document whose role is `inspector`.
 2. Open Reports to see cases assigned to the signed-in investigator.
 3. Review the citizen-provided information.
-4. Update the case status as the investigation progresses.
+4. Update the case status as the investigation progresses through `Under Review`, `Verified` or `Assigned`. Final `Resolved` and `Rejected` decisions remain administrator actions.
 5. Enter an objective observation, severity and recommended action.
 6. Optionally upload investigation evidence.
 7. Submit findings for administrative review.
@@ -136,7 +138,7 @@ Investigators should record observations rather than legal conclusions. The appl
 
 - Citizen: own reports, own activity and citizen map/profile views.
 - Administrator: report review, assignment, user directory, analytics and settings.
-- Investigator/field officer: assigned cases and investigation findings.
+- Investigator/field officer: assigned cases, investigation findings and non-final investigation status updates. Final `Resolved` and `Rejected` decisions are administrator actions.
 
 Backend rules, not hidden buttons alone, are the access boundary.
 
@@ -175,3 +177,27 @@ Run `npm install`, then `npm run typecheck`. Check Expo SDK and Node.js versions
 ## 12. Documentation evidence
 
 The supplied screenshots in `documentation/screenshots` document captured citizen, administrator and investigator paths. The screenshot index identifies states that still require live captures, such as invalid credentials, unauthorized access and unavailable AI service.
+
+## 13. Functions and media setup details
+
+Install the Functions dependencies separately before deploying them:
+
+```powershell
+cd functions
+npm install
+cd ..
+firebase deploy --only functions
+```
+
+There is no separate Functions build script in this repository; Firebase deploys `functions/index.js` using the Node.js 20 runtime declared in `functions/package.json`. The root web export must be produced before Hosting deployment:
+
+```powershell
+npx expo export --platform web
+firebase deploy --only hosting
+```
+
+The citizen evidence flow uploads selected media to Cloudinary using the public cloud name and unsigned upload preset in `.env.local`, then stores the returned URL in Firestore. Firebase Authentication and Firestore provide identity and application data; Firebase Storage is not used by this current evidence path.
+
+## 14. Verification record
+
+Verification on 15 October 2026: the existing working copy passed `npm run typecheck`, and `npx expo export --platform web` passed and produced `dist/`. A fresh clone from `https://github.com/Theozlayne/landwatch-zw` completed successfully, but both the root `npm install` and `functions\npm install` were blocked on this workstation by `UNABLE_TO_VERIFY_LEAF_SIGNATURE` when downloading from npm. The Functions attempt also reported that this workstation is running Node 24 while the project declares Node 20. The documented clean setup therefore still requires a Node 20 environment with a working npm certificate chain. No connected Firebase workflow was claimed, because it requires Firebase credentials, configured services, authorised accounts and, for evidence uploads, Cloudinary configuration.

@@ -10,7 +10,7 @@ This repository contains an Expo/React Native application that also supports web
 - Citizen report creation with category, description, location and optional image evidence.
 - Citizen drafts, activity history, report details and status updates.
 - Administrator report queue, review/status actions, assignment, staff/user directory and operational analytics screens.
-- Investigator/field-officer access to assigned reports, status updates and investigation findings.
+- Investigator/field-officer access to assigned reports, investigation-state updates and investigation findings; final resolution/rejection decisions remain administrator actions.
 - Firebase security rules for citizen-owned reports and staff access.
 - Advisory AI evidence analysis when the configured service is available. AI output is an indicator for human review; it does not determine illegality.
 - Expo Android configuration with the Zimbabwe coat of arms and package identifier `zw.landwatch.citizen`.
@@ -22,7 +22,7 @@ Some displayed metrics, reward points, notification behavior and analytics are p
 - Node.js 20 LTS or a compatible current LTS release.
 - npm.
 - Expo CLI through the project dependencies.
-- A Firebase project with Authentication, Firestore and Storage configured for local development.
+- A Firebase project with Authentication and Firestore configured for local development. The current evidence-upload flow uses Cloudinary rather than Firebase Storage.
 - Optional: Firebase CLI for rules, Functions and Hosting deployment.
 - Optional: EAS CLI for Android builds.
 
@@ -65,6 +65,8 @@ firebase deploy --only firestore:rules,firestore:indexes,functions,hosting
 ```
 
 Do not commit `.env.local`, Firebase tokens, service-account JSON files or real user records.
+
+For the exact staff-account setup, UID requirement, Functions installation, Cloudinary media path and verification notes, read [docs/USER_MANUAL.md](docs/USER_MANUAL.md).
 
 ## Documentation
 
